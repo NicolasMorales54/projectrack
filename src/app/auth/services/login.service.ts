@@ -11,6 +11,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { User, UserState, TokenPayload } from '../../core/model/user.model';
+import { environment } from '../../../environments/environment';
 
 export interface LoginDto {
   correoElectronico: string;
@@ -26,7 +27,7 @@ export interface LoginResponse {
   providedIn: 'root',
 })
 export class LoginService {
-  private readonly apiUrl = 'http://localhost:3000/auth/login';
+  private readonly apiUrl = `${environment.apiUrl}/auth/login`;
   private readonly TOKEN_KEY = 'auth_token';
   private userStateSubject = new BehaviorSubject<UserState>({
     isLoggedIn: false,

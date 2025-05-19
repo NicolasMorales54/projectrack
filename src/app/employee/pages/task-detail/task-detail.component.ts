@@ -194,9 +194,10 @@ export class TaskDetailComponent implements OnInit {
     }
   }
 
-  onSubtareaAgregada(titulo: string) {
-    this.addSubtask(titulo);
+  onSubtareaAgregada(subtask: Subtask) {
+    this.subtasks.push(subtask);
     this.showAgregarSubtareaModal = false;
+    this.cdr.markForCheck();
   }
 
   onTiempoRegistrado(event: { start: string; end: string; notes: string }) {

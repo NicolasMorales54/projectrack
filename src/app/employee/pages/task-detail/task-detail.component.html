@@ -60,9 +60,8 @@
                 <td>{{ t.notas || '-' }}</td>
             </tr>
         </table>
-    </div>
-
-    <app-modal-agregar-subtarea *ngIf="showAgregarSubtareaModal"
+    </div>    <app-modal-agregar-subtarea *ngIf="showAgregarSubtareaModal"
+        [taskId]="task.id"
         (subtareaAgregada)="$event && onSubtareaAgregada($event)"
         (cerrar)="showAgregarSubtareaModal = false"></app-modal-agregar-subtarea>
     <app-modal-registrar-tiempo *ngIf="showRegistrarTiempoModal"
