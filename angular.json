@@ -55,7 +55,9 @@
                 }
               ],
               "outputHashing": "all",
-              "aot": true
+              "aot": true,
+              "outputPath": "dist/projectrack",
+              "optimization": true
             },
             "development": {
               "optimization": false,
