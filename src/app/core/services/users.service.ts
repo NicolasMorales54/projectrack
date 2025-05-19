@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
 import { User } from '../model/user.model';
 
 export interface CreateUserDto {
@@ -17,7 +18,7 @@ export interface UpdateUserDto extends Partial<CreateUserDto> {}
   providedIn: 'root',
 })
 export class UsersService {
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = `${environment.apiUrl}/users`;
 
   constructor(private http: HttpClient) {}
 

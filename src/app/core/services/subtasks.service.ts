@@ -7,12 +7,13 @@ import {
   CreateSubtaskDto,
   UpdateSubtaskDto,
 } from '../model/subtask.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SubtasksService {
-  private readonly apiUrl = 'http://localhost:3000/subtasks';
+  private readonly apiUrl = `${environment.apiUrl}/subtasks`;
 
   constructor(private http: HttpClient) {}
 

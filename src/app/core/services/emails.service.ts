@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 
 import { Email, CreateEmailDto, UpdateEmailDto } from '../model/email.model';
 import { LoginService } from '../../auth/services/login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmailsService {
-  private readonly apiUrl = 'http://localhost:3000/emails';
+  private readonly apiUrl = `${environment.apiUrl}/emails`;
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 

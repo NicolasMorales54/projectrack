@@ -2,18 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import {
-  TaskAssignment,
-  CreateTaskAssignmentDto,
-  UpdateTaskAssignmentDto,
-} from '../model/task-assignment.model';
+import { TaskAssignment, CreateTaskAssignmentDto, UpdateTaskAssignmentDto, } from '../model/task-assignment.model';
 import { LoginService } from '../../auth/services/login.service';
+import { environment } from '../../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskAssignmentsService {
-  private readonly apiUrl = 'http://localhost:3000/task-assignments';
+  private readonly apiUrl = `${environment.apiUrl}/task-assignments`;
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 

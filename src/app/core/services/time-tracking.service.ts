@@ -9,12 +9,13 @@ import {
   UpdateTimeTrackingDto,
 } from '../model/time-tracking.model';
 import { LoginService } from '../../auth/services/login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TimeTrackingService {
-  private readonly apiUrl = 'http://localhost:3000/time-register';
+  private readonly apiUrl = `${environment.apiUrl}/time-register`;
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 

@@ -8,12 +8,13 @@ import {
   UpdateSubtaskAssignmentDto,
 } from '../model/subtask-assignment.model';
 import { LoginService } from '../../auth/services/login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SubtaskAssignmentsService {
-  private readonly apiUrl = 'http://localhost:3000/subtask-assignments';
+  private readonly apiUrl = `${environment.apiUrl}/subtask-assignments`;
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 

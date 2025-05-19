@@ -8,12 +8,13 @@ import {
   UpdateNotificationDto,
 } from '../model/notification.model';
 import { LoginService } from '../../auth/services/login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationsService {
-  private readonly apiUrl = 'http://localhost:3000/notifications';
+  private readonly apiUrl = `${environment.apiUrl}/notifications`;
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 

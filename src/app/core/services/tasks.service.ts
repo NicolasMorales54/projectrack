@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 export enum EstadoTarea {
   POR_HACER = 'Por Hacer',
   EN_PROGRESO = 'En Progreso',
@@ -56,7 +58,7 @@ export interface UpdateTaskDto extends Partial<CreateTaskDto> {}
   providedIn: 'root',
 })
 export class TasksService {
-  private apiUrl = `http://localhost:3000/tasks`;
+  private apiUrl = `${environment.apiUrl}/tasks`;
 
   constructor(private http: HttpClient) {}
 

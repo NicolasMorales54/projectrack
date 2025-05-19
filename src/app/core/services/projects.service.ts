@@ -8,12 +8,13 @@ import {
   UpdateProjectDto,
 } from '../model/project.model';
 import { LoginService } from '../../auth/services/login.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProjectsService {
-  private readonly apiUrl = 'http://localhost:3000/projects';
+  private readonly apiUrl = `${environment.apiUrl}/projects`;
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
