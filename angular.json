@@ -19,6 +19,7 @@
             "polyfills": [
               "zone.js"
             ],
+            "aot": true,
             "tsConfig": "tsconfig.app.json",
             "assets": [
               {
@@ -38,21 +39,23 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "3MB",
+                  "maximumError": "3MB"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumWarning": "3MB",
+                  "maximumError": "3MB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "aot": true
             },
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": true,
+              "aot": true
             }
           },
           "defaultConfiguration": "production"

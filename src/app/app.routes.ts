@@ -1,10 +1,16 @@
 import { Routes } from '@angular/router';
 
+import { EmployeeComponent } from './employee/employee.component';
+import { LeaderComponent } from './leader/leader.component';
+import { ClientComponent } from './client/client.component';
+import { AdminComponent } from './admin/admin.component';
+import { authGuard } from './core/guards/auth.guard';
+
 export const routes: Routes = [
   {
     path: 'login',
-    loadComponent: () =>
-      import('./auth/login/login.component').then((m) => m.LoginComponent),
+    loadChildren: () =>
+      import('./auth/login/login.routes').then((m) => m.default),
   },
   {
     path: 'recover-password',
@@ -15,10 +21,107 @@ export const routes: Routes = [
   },
   {
     path: '',
-    loadComponent: () =>
-      import('./dashboard/pages/main-page/main-page.component').then(
-        (m) => m.MainPageComponent
-      ),
+    redirectTo: 'login',
     pathMatch: 'full',
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard],
+    component: AdminComponent,
+    children: [
+      {
+        path: 'main',
+        loadComponent: () =>
+          import('./admin/main-page/main-page.component').then(
+            (m) => m.MainPageComponent
+          ),
+      },
+      // Add more admin-specific child routes here
+    ],
+  },
+  {
+    path: 'leader',
+    canActivate: [authGuard],
+    component: LeaderComponent,
+    children: [
+      {
+        path: 'main',
+        loadComponent: () =>
+          import('./leader/main-page/main-page.component').then(
+            (m) => m.MainPageComponent
+          ),
+      },
+      // Add more leader-specific child routes here
+    ],
+  },
+  {
+    path: 'employee',
+    canActivate: [authGuard],
+    component: EmployeeComponent,
+    children: [
+      {
+        path: 'main',
+        loadComponent: () =>
+          import('./employee/main-page/main-page.component').then(
+            (m) => m.MainPageComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/resumen',
+        loadComponent: () =>
+          import('./employee/pages/resumen/resumen.component').then(
+            (m) => m.ResumenComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/kanban',
+        loadComponent: () =>
+          import('./employee/pages/kanban/kanban.component').then(
+            (m) => m.KanbanComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/create-task',
+        loadComponent: () =>
+          import('./employee/pages/create-task/create-task.component').then(
+            (m) => m.CreateTaskComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/task-detail/:taskId',
+        loadComponent: () =>
+          import('./employee/pages/task-detail/task-detail.component').then(
+            (m) => m.TaskDetailComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/users',
+        loadComponent: () =>
+          import('./employee/pages/users/users.component').then(
+            (m) => m.UsersComponent
+          ),
+      },
+      // Add more employee-specific child routes here
+    ],
+  },
+  {
+    path: 'client',
+    canActivate: [authGuard],
+    component: ClientComponent,
+    children: [
+      {
+        path: 'main',
+        loadComponent: () =>
+          import('./client/main-page/main-page.component').then(
+            (m) => m.MainPageComponent
+          ),
+      },
+      // Add more client-specific child routes here
+    ],
+  },
+  // Catch-all route
+  {
+    path: '**',
+    redirectTo: 'login',
   },
 ];

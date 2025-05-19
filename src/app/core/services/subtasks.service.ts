@@ -1,0 +1,76 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+import {
+  Subtask,
+  CreateSubtaskDto,
+  UpdateSubtaskDto,
+} from '../model/subtask.model';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SubtasksService {
+  private readonly apiUrl = 'http://localhost:3000/subtasks';
+
+  constructor(private http: HttpClient) {}
+
+  create(dto: CreateSubtaskDto): Observable<Subtask> {
+    return this.http.post<Subtask>(this.apiUrl, dto);
+  }
+
+  findAll(): Observable<Subtask[]> {
+    return this.http.get<Subtask[]>(this.apiUrl);
+  }
+
+  findOne(id: number): Observable<Subtask> {
+    return this.http.get<Subtask>(`${this.apiUrl}/${id}`);
+  }
+
+  update(id: number, dto: UpdateSubtaskDto): Observable<Subtask> {
+    return this.http.patch<Subtask>(`${this.apiUrl}/${id}`, dto);
+  }
+
+  remove(id: number): Observable<Subtask> {
+    return this.http.delete<Subtask>(`${this.apiUrl}/${id}`);
+  }
+
+  findByTaskId(taskId: number): Observable<Subtask[]> {
+    return this.http.get<Subtask[]>(`${this.apiUrl}/by-task/${taskId}`);
+  }
+
+  findByProjectId(projectId: number): Observable<Subtask[]> {
+    return this.http.get<Subtask[]>(`${this.apiUrl}/by-project/${projectId}`);
+  }
+
+  createForTask(taskId: number, dto: CreateSubtaskDto): Observable<Subtask> {
+    return this.http.post<Subtask>(`${this.apiUrl}/by-task/${taskId}`, dto);
+  }
+
+  updateForTask(
+    taskId: number,
+    id: number,
+    dto: UpdateSubtaskDto
+  ): Observable<Subtask> {
+    return this.http.patch<Subtask>(
+      `${this.apiUrl}/by-task/${taskId}/${id}`,
+      dto
+    );
+  }
+
+  updateForProject(
+    projectId: number,
+    id: number,
+    dto: UpdateSubtaskDto
+  ): Observable<Subtask> {
+    return this.http.patch<Subtask>(
+      `${this.apiUrl}/by-project/${projectId}/${id}`,
+      dto
+    );
+  }
+
+  toggleComplete(id: number, completed: boolean): Observable<Subtask> {
+    return this.update(id, { completada: completed });
+  }
+}
