@@ -1,6 +1,6 @@
 export interface TimeTracking {
   id: number;
-  tareaId: number;
+  taskId: number;
   usuarioId: number;
   tiempoInicio: Date;
   tiempoFin?: Date;
@@ -12,7 +12,7 @@ export interface TimeTracking {
 }
 
 export interface CreateTimeTrackingDto {
-  tareaId: number;
+  taskId: number;
   usuarioId: number;
   tiempoInicio: Date;
   tiempoFin?: Date;

@@ -25,13 +25,13 @@ export class TimeTrackingService {
     const payload: any = {
       ...dto,
       userId: dto.usuarioId || userId,
-      taskId: dto.tareaId,
+      taskId: dto.taskId,
       tiempoInicio: dto.tiempoInicio,
       tiempoFin: dto.tiempoFin,
       notas: dto.notas,
     };
     delete payload.usuarioId;
-    delete payload.tareaId;
+    delete payload.taskId;
     return this.http.post<TimeTracking>(this.apiUrl, payload);
   }
 
@@ -54,7 +54,7 @@ export class TimeTrackingService {
   // No /time-register/task/:id endpoint in backend, so filter client-side
   findByTaskId(taskId: number): Observable<TimeTracking[]> {
     return this.findAll().pipe(
-      map((records) => records.filter((r) => r.tareaId === taskId))
+      map((records) => records.filter((r) => r.taskId === taskId))
     );
   }
 
@@ -74,7 +74,7 @@ export class TimeTrackingService {
 
   startTracking(taskId: number, notes?: string): Observable<TimeTracking> {
     const dto: CreateTimeTrackingDto = {
-      tareaId: taskId,
+      taskId: taskId,
       usuarioId: this.loginService.getCurrentUserId() || 0,
       tiempoInicio: new Date(),
       notas: notes,

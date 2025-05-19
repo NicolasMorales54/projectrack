@@ -1,6 +1,6 @@
 export interface Subtask {
   id: number;
-  tareaId: number;
+  taskId: number;
   titulo: string;
   texto?: string;
   completada: boolean;
@@ -8,7 +8,7 @@ export interface Subtask {
 }
 
 export interface CreateSubtaskDto {
-  tareaId: number;
+  taskId: number;
   titulo: string;
   texto?: string;
   completada?: boolean;

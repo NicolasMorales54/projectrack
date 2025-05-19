@@ -1,13 +1,13 @@
 export interface TaskAssignment {
   id: number;
-  tareaId: number;
+  taskId: number;
   usuarioId: number;
   tarea?: any;
   usuario?: any;
 }
 
 export interface CreateTaskAssignmentDto {
-  tareaId: number;
+  taskId: number;
   usuarioId: number;
 }
 

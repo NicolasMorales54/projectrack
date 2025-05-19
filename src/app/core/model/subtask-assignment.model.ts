@@ -1,13 +1,13 @@
 export interface SubtaskAssignment {
   id: number;
-  subtareaId: number;
+  subtaskId: number;
   usuarioId: number;
   subtarea?: any;
   usuario?: any;
 }
 
 export interface CreateSubtaskAssignmentDto {
-  subtareaId: number;
+  subtaskId: number;
   usuarioId: number;
 }
 

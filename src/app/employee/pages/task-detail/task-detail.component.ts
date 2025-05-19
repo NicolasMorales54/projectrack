@@ -143,7 +143,7 @@ export class TaskDetailComponent implements OnInit {
   addSubtask(title: string) {
     if (this.task) {
       this.subtasksService
-        .createForTask(this.task.id, { titulo: title, tareaId: this.task.id })
+        .createForTask(this.task.id, { titulo: title, taskId: this.task.id })
         .subscribe((newSubtask: Subtask) => {
           this.subtasks.push(newSubtask);
           this.cdr.markForCheck();
@@ -155,7 +155,7 @@ export class TaskDetailComponent implements OnInit {
     if (this.task) {
       this.timeTrackingService
         .create({
-          tareaId: this.task.id,
+          taskId: this.task.id,
           usuarioId: this.task.creadoPorId,
           tiempoInicio: start,
           tiempoFin: end,

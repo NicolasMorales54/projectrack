@@ -44,8 +44,8 @@ export class SubtasksService {
   findByProjectId(projectId: number): Observable<Subtask[]> {
     return this.http.get<Subtask[]>(`${this.apiUrl}/by-project/${projectId}`);
   }
-
   createForTask(taskId: number, dto: CreateSubtaskDto): Observable<Subtask> {
+    console.log(`Calling API: POST ${this.apiUrl}/by-task/${taskId}`, dto);
     return this.http.post<Subtask>(`${this.apiUrl}/by-task/${taskId}`, dto);
   }
 
@@ -68,6 +68,25 @@ export class SubtasksService {
     return this.http.patch<Subtask>(
       `${this.apiUrl}/by-project/${projectId}/${id}`,
       dto
+    );
+  }
+
+  /**
+   * Test method for diagnosing subtask creation issues
+   * Sends only the minimal required fields
+   */
+  createForTaskMinimal(taskId: number, titulo: string): Observable<Subtask> {
+    const minimalDto = {
+      taskId: taskId,
+      titulo: titulo,
+    };
+    console.log(
+      `Calling minimal API: POST ${this.apiUrl}/by-task/${taskId}`,
+      minimalDto
+    );
+    return this.http.post<Subtask>(
+      `${this.apiUrl}/by-task/${taskId}`,
+      minimalDto
     );
   }
 
