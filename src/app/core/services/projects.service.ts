@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
+import { Observable, Subject, tap } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
 import {
   CreateProjectDto,
@@ -15,6 +15,8 @@ import { environment } from '../../../environments/environment';
 })
 export class ProjectsService {
   private readonly apiUrl = `${environment.apiUrl}/projects`;
+  private projectsChangedSubject = new Subject<void>();
+  projectsChanged$ = this.projectsChangedSubject.asObservable();
 
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
@@ -24,7 +26,10 @@ export class ProjectsService {
     if (userId) {
       dto.creadoPorId = userId;
     }
-    return this.http.post<Project>(this.apiUrl, dto);
+    return this.http.post<Project>(this.apiUrl, dto).pipe(
+      // Notify listeners after project creation
+      tap(() => this.projectsChangedSubject.next())
+    );
   }
 
   findAll(): Observable<Project[]> {

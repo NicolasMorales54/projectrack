@@ -29,9 +29,8 @@ export class MainPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const userId = this.loginService.getCurrentUserId();
-    if (userId) {
-      this.projectsService.findByUserId(userId).subscribe({
+    const loadProjects = () => {
+      this.projectsService.findAll().subscribe({
         next: (projects) => {
           this.projects = projects;
           this.loading = false;
@@ -44,11 +43,11 @@ export class MainPageComponent implements OnInit {
           console.error('Error loading projects:', err);
         },
       });
-    } else {
-      this.projects = [];
-      this.loading = false;
-      this.cdr.markForCheck();
-    }
+    };
+    loadProjects();
+    this.projectsService.projectsChanged$.subscribe(() => {
+      loadProjects();
+    });
   }
 
   formatDate(dateStr?: string): string {

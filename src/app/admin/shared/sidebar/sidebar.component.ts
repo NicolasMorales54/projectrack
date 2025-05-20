@@ -61,20 +61,21 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
   ) {}
 
   ngOnInit(): void {
-    // Get current user
-    this.currentUser = this.loginService.getCurrentUser();
-    if (this.currentUser?.id) {
-      this.projectsService.findByUserId(this.currentUser.id).subscribe({
+    const loadProjects = () => {
+      this.projectsService.findAll().subscribe({
         next: (data) => {
           this.projects$ = data;
           this.cdr.markForCheck();
-          console.log('Projects loaded:', this.projects$);
         },
         error: (err) => {
           console.error('Failed to load projects', err);
         },
       });
-    }
+    };
+    loadProjects();
+    this.projectsService.projectsChanged$.subscribe(() => {
+      loadProjects();
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -100,14 +101,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
   }
 
   handleProjectCreated(project: Project) {
-    // Add created project and refresh list
-    this.projectsService.findByUserId(this.currentUser!.id!).subscribe({
-      next: (data) => {
-        this.projects$ = data;
-        this.cdr.markForCheck();
-      },
-      error: (err) => console.error('Failed to refresh projects', err),
-    });
+    // No need to manually refresh, just close the modal
     this.closeCreateProjectModal();
   }
 
