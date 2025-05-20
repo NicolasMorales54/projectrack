@@ -40,16 +40,20 @@ export class LoginService {
   constructor(private http: HttpClient, private router: Router) {
     this.loadStoredToken();
   }
-
   login(
     credentials: LoginDto
   ): Observable<{ token: string; userId: number | null; rol: string }> {
+    console.log(
+      '[AuthService] Attempting login for:',
+      credentials.correoElectronico
+    );
     return this.http.post<LoginResponse>(this.apiUrl, credentials).pipe(
       map((response) => {
         const token = response.access_token;
         const payload = response.tokenPayload;
         console.log('[AuthService] token generado:', token);
         console.log('[AuthService] payload recibido:', payload);
+        console.log('[AuthService] User role from payload:', payload.rol);
 
         if (!payload || !payload.userId || !payload.email || !payload.rol) {
           console.error('Invalid token payload structure received:', payload);
@@ -70,21 +74,29 @@ export class LoginService {
             this.logout();
             throw new Error('Session expired. Please log in again.');
           }
-        }
+        } // Log the role type for debugging
+        console.log('[AuthService] Role received from API:', payload.rol);
+        console.log('[AuthService] Role type:', typeof payload.rol);
 
         // Store iat and exp in userState for session management
-        this.userStateSubject.next({
+        const userState = {
           isLoggedIn: true,
           user: {
             id: payload.userId,
             correoElectronico: payload.email,
-            rol: payload.rol as any,
+            rol: payload.rol,
           },
           token: token,
           // @ts-ignore
           iat: payload.iat,
           exp: payload.exp,
-        });
+        };
+
+        console.log(
+          '[AuthService] Setting user state:',
+          JSON.stringify(userState, null, 2)
+        );
+        this.userStateSubject.next(userState);
 
         localStorage.setItem(this.TOKEN_KEY, token);
         localStorage.setItem(
@@ -112,7 +124,6 @@ export class LoginService {
     });
     this.router.navigate(['/login']);
   }
-
   private loadStoredToken(): void {
     const token = localStorage.getItem(this.TOKEN_KEY);
     const payloadStr = localStorage.getItem(this.TOKEN_KEY + '_payload');
@@ -122,9 +133,20 @@ export class LoginService {
         // Check expiration
         const now = Date.now() / 1000;
         if (!payload.exp || payload.exp < now) {
+          console.log('Token expired, logging out');
           this.logout();
           return;
         }
+
+        // Verify we have all required user data
+        if (!payload.userId || !payload.email || !payload.rol) {
+          console.error('Incomplete token payload:', payload);
+          this.logout();
+          return;
+        }
+        console.log('Loading stored token with role:', payload.rol);
+        console.log('Role type from storage:', typeof payload.rol);
+
         // Set up auto-logout timer
         const msUntilExp = payload.exp * 1000 - Date.now();
         if (msUntilExp > 0) {
@@ -135,19 +157,28 @@ export class LoginService {
           this.logout();
           return;
         }
-        this.userStateSubject.next({
+
+        // Create user state object
+        const userState = {
           isLoggedIn: true,
           user: {
             id: payload.userId,
             correoElectronico: payload.email,
-            rol: payload.rol as any,
+            rol: payload.rol,
           },
           token: token,
           // @ts-ignore
           iat: payload.iat,
           exp: payload.exp,
-        });
+        };
+
+        console.log(
+          'Setting user state from storage:',
+          JSON.stringify(userState, null, 2)
+        );
+        this.userStateSubject.next(userState);
       } catch (e) {
+        console.error('Error parsing stored token payload:', e);
         this.logout();
       }
     } else {

@@ -14,17 +14,85 @@ export const authGuard: CanActivateFn = (route, state) => {
       loginService['loadStoredToken']();
     }
     if (!loginService.isLoggedIn()) {
+      console.log('Auth guard: Not logged in, redirecting to login');
+      return router.parseUrl('/login');
+    }
+  }
+  // Get current user
+  const currentUser = loginService.getCurrentUser();
+  const currentUserId = currentUser?.id;
+
+  // Check if the user has access to this path
+  const url = state.url;
+  const userRole = currentUser?.rol;
+
+  console.log('Current user state:', JSON.stringify(currentUser, null, 2));
+  console.log(
+    `Auth guard: Checking access to ${url} for user with role "${userRole}"`
+  );
+
+  // Debugging info
+  if (url.includes('/admin')) {
+    console.log(
+      `Admin route check: userRole="${userRole}", expected="Administrador", equal=${
+        userRole === 'Administrador'
+      }`
+    );
+  }
+  // Check role-based access - handle possible string comparison issues
+  if (url.includes('/admin')) {
+    // Get the exact string representation for debugging
+    const roleStr = String(userRole);
+    const expectedRole = 'Administrador';
+
+    console.log(
+      `Role comparison: "${roleStr}" === "${expectedRole}" is ${
+        roleStr === expectedRole
+      }`
+    );
+    console.log(
+      'String character codes:',
+      Array.from(roleStr).map((c) => c.charCodeAt(0))
+    );
+    console.log(
+      'Expected character codes:',
+      Array.from(expectedRole).map((c) => c.charCodeAt(0))
+    );
+
+    // Check if user has admin role
+    if (roleStr !== expectedRole) {
+      console.warn(
+        `Auth guard: User with role "${userRole}" tried to access admin route`
+      );
       return router.parseUrl('/login');
     }
   }
 
-  // Get current user ID
-  const currentUserId = loginService.getCurrentUserId();
+  if (url.includes('/leader') && userRole !== 'Líder de Proyecto') {
+    console.warn(
+      `Auth guard: User with role ${userRole} tried to access leader route`
+    );
+    return router.parseUrl('/login');
+  }
+
+  if (url.includes('/employee') && userRole !== 'Empleado') {
+    console.warn(
+      `Auth guard: User with role ${userRole} tried to access employee route`
+    );
+    return router.parseUrl('/login');
+  }
+
+  if (url.includes('/client') && userRole !== 'Cliente') {
+    console.warn(
+      `Auth guard: User with role ${userRole} tried to access client route`
+    );
+    return router.parseUrl('/login');
+  }
 
   // For routes with userId param, validate it matches logged in user
   const requestedUserId = route.params['userid'];
   if (requestedUserId && requestedUserId !== currentUserId?.toString()) {
-    console.warn('User ID mismatch, redirecting to correct path');
+    console.warn('Auth guard: User ID mismatch, redirecting to correct path');
     if (currentUserId) {
       // Redirect to the same route but with correct user ID
       return router.parseUrl(
@@ -34,5 +102,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     return router.parseUrl('/login');
   }
 
+  // All checks passed
+  console.log('Auth guard: Access granted');
   return true;
 };

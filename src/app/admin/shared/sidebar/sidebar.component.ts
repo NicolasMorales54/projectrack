@@ -15,6 +15,7 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import { ModalCreateProjectComponent } from './modal-create-project.component';
 import { ProjectsService } from '../../../core/services/projects.service';
 import { LoginService } from '../../../auth/services/login.service';
 import { Project } from '../../../core/model/project.model';
@@ -22,7 +23,12 @@ import { User } from '../../../core/model/user.model';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [LucideAngularModule, CommonModule, RouterLink],
+  imports: [
+    LucideAngularModule,
+    CommonModule,
+    RouterLink,
+    ModalCreateProjectComponent,
+  ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +40,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
   readonly squareUserRound = SquareUserRound;
   projects$: Project[] = [];
   currentUser: User | null = null;
+  showCreateProjectModal = false;
 
   projectColors = [
     'bg-green-500',
@@ -86,5 +93,25 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
 
   logout(): void {
     this.loginService.logout();
+  }
+
+  openCreateProjectModal() {
+    this.showCreateProjectModal = true;
+  }
+
+  handleProjectCreated(project: Project) {
+    // Add created project and refresh list
+    this.projectsService.findByUserId(this.currentUser!.id!).subscribe({
+      next: (data) => {
+        this.projects$ = data;
+        this.cdr.markForCheck();
+      },
+      error: (err) => console.error('Failed to refresh projects', err),
+    });
+    this.closeCreateProjectModal();
+  }
+
+  closeCreateProjectModal() {
+    this.showCreateProjectModal = false;
   }
 }

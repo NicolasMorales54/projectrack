@@ -2,7 +2,7 @@ export interface User {
   id: number;
   nombre?: string;
   correoElectronico: string;
-  rol?: 'user' | 'admin';
+  rol?: 'Administrador' | 'Líder de Proyecto' | 'Empleado' | 'Cliente';
   createdAt?: string;
   updatedAt?: string;
 }
@@ -16,7 +16,7 @@ export interface UserState {
 export interface TokenPayload {
   userId: number;
   email: string;
-  rol?: string;
+  rol?: 'Administrador' | 'Líder de Proyecto' | 'Empleado' | 'Cliente';
   iat: number;
   exp: number;
 }

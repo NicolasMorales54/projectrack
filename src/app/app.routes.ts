@@ -27,7 +27,8 @@ export const routes: Routes = [
   {
     path: 'admin',
     canActivate: [authGuard],
-    component: AdminComponent,
+    loadComponent: () =>
+      import('./admin/admin.component').then((m) => m.AdminComponent),
     children: [
       {
         path: 'main',
@@ -36,6 +37,49 @@ export const routes: Routes = [
             (m) => m.MainPageComponent
           ),
       },
+      {
+        path: 'all-users',
+        loadComponent: () =>
+          import('./admin/all-users/all-users.component').then(
+            (m) => m.AllUsersComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/resumen',
+        loadComponent: () =>
+          import('./admin/pages/resumen/resumen.component').then(
+            (m) => m.ResumenComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/kanban',
+        loadComponent: () =>
+          import('./admin/pages/kanban/kanban.component').then(
+            (m) => m.KanbanComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/create-task',
+        loadComponent: () =>
+          import('./admin/pages/create-task/create-task.component').then(
+            (m) => m.CreateTaskComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/task-detail/:taskId',
+        loadComponent: () =>
+          import('./admin/pages/task-detail/task-detail.component').then(
+            (m) => m.TaskDetailComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/users',
+        loadComponent: () =>
+          import('./admin/pages/users/users.component').then(
+            (m) => m.UsersComponent
+          ),
+      },
+
       // Add more admin-specific child routes here
     ],
   },

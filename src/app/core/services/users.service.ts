@@ -6,10 +6,15 @@ import { environment } from '../../../environments/environment';
 import { User } from '../model/user.model';
 
 export interface CreateUserDto {
-  nombre?: string;
+  nombreUsuario: string;
   correoElectronico: string;
   contrasena: string;
-  rol?: 'user' | 'admin';
+  rol: 'Líder de Proyecto' | 'Empleado' | 'Cliente';
+  primerNombre: string;
+  primerApellido: string;
+  segundoNombre?: string;
+  segundoApellido?: string;
+  posicion?: string;
 }
 
 export interface UpdateUserDto extends Partial<CreateUserDto> {}
