@@ -1,6 +1,6 @@
 export enum RolProyecto {
-  ADMINISTRADOR = 'Administrador',
-  LIDER_PROYECTO = 'Líder de Proyecto',
+  ADMIN = 'Administrador',
+  LIDER = 'Líder de Proyecto',
   EMPLEADO = 'Empleado',
   CLIENTE = 'Cliente',
 }

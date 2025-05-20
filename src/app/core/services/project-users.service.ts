@@ -19,7 +19,11 @@ export class ProjectUsersService {
   constructor(private http: HttpClient, private loginService: LoginService) {}
 
   create(dto: CreateProjectUserDto): Observable<ProjectUser> {
-    return this.http.post<ProjectUser>(this.apiUrl, dto);
+    // Use the correct backend endpoint for assigning a user to a project
+    return this.http.post<ProjectUser>(
+      `${environment.apiUrl}/projects/assign-user`,
+      dto
+    );
   }
 
   findAll(): Observable<ProjectUser[]> {

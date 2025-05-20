@@ -13,12 +13,14 @@
   <div class="relative flex flex-col h-full max-h-full">
 
     <header class="flex justify-between items-center gap-x-2 p-4">
-      <a class="flex focus:opacity-80 focus:outline-hidden text-black dark:text-white" [routerLink]="['/admin/main']" aria-label="Brand">
+      <a class="flex focus:opacity-80 focus:outline-hidden text-black dark:text-white" [routerLink]="['/admin/main']"
+        aria-label="Brand">
         <div class="flex flex-col-2 items-center gap-x-2">
           <img src="ufpslogo.png" class="rounded-xs w-10 h-10" alt="Logo" />
           <div class="items-center gap-x-2 grid grid-row-2">
             <span class="font-semibold text-gray-800 dark:text-white text-lg">Projectrack</span>
-            <span *ngIf="currentUser" class="dark:opacity-80 text-gray-800 dark:text-white text-sm">
+            <span *ngIf="currentUser" class="dark:opacity-80 text-gray-800 dark:text-white text-sm text-wrap">
+              {{ currentUser.nombre }}
               {{ currentUser.correoElectronico }}
             </span>
           </div>

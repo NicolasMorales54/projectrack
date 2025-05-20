@@ -8,7 +8,14 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import {
+  RolProyecto,
+  CreateProjectUserDto,
+} from '../../../core/model/project-user.model';
+import { ProjectUsersService } from '../../../core/services/project-users.service';
+import { UsersExtraService } from '../../../core/services/users-extra.service';
 import { ProjectsService } from '../../../core/services/projects.service';
+import { ModalAssignUserComponent } from './modal-assign-user.component';
 import { UsersService } from '../../../core/services/users.service';
 import { Project } from '../../../core/model/project.model';
 import { User } from '../../../core/model/user.model';
@@ -16,7 +23,7 @@ import { User } from '../../../core/model/user.model';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ModalAssignUserComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,7 +34,13 @@ export class UsersComponent implements OnInit {
   projectId: number | null = null;
   projectName: string = '';
 
+  showAssignModal = false;
+  assignLoading = false;
+  assignError: string | null = null;
+
   private usersService = inject(UsersService);
+  private usersExtraService = inject(UsersExtraService);
+  private projectUsersService = inject(ProjectUsersService);
   private projectsService = inject(ProjectsService);
   private route = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
@@ -51,7 +64,6 @@ export class UsersComponent implements OnInit {
 
         this.usersService.findByProjectId(this.projectId).subscribe({
           next: (users: any[]) => {
-            console.log('Received users from backend:', users);
             this.users = users.map((u) => {
               // Fallback to available fields
               return {
@@ -73,5 +85,53 @@ export class UsersComponent implements OnInit {
         });
       }
     });
+  }
+
+  openAssignModal() {
+    this.showAssignModal = true;
+    this.assignLoading = false;
+    this.cdr.markForCheck();
+  }
+
+  handleAssignUser(data: { usuarioId: number; rolEnProyecto: RolProyecto }) {
+    if (!this.projectId) return;
+    this.assignLoading = true;
+    this.assignError = null;
+    const dto: CreateProjectUserDto = {
+      proyectoId: this.projectId,
+      usuarioId: data.usuarioId,
+      rolEnProyecto: data.rolEnProyecto,
+    };
+    this.projectUsersService.create(dto).subscribe({
+      next: () => {
+        this.showAssignModal = false;
+        this.assignLoading = false;
+        // Refresh users list
+        this.usersService
+          .findByProjectId(this.projectId!)
+          .subscribe((users: any[]) => {
+            this.users = users.map((u) => ({
+              id: u.id,
+              nombre: u.primerNombre || u.nombre || u.nombreUsuario || '',
+              correoElectronico: u.correoElectronico || '',
+              rol: u.rol || u.rolEnProyecto || '',
+              createdAt: u.createdAt || u.fechaRegistro || '',
+            }));
+            this.cdr.markForCheck();
+          });
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.assignError = 'No se pudo asignar el usuario.';
+        this.assignLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  closeAssignModal() {
+    console.log('closeAssignModal called');
+    this.showAssignModal = false;
+    this.assignError = null;
   }
 }

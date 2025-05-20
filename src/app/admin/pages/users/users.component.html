@@ -24,6 +24,14 @@
   <ng-template #noUsers>
     <div class="mt-8 text-gray-400 text-center">No hay usuarios asignados a este proyecto.</div>
   </ng-template>
+  <div class="flex justify-end mb-4">
+    <button (click)="openAssignModal()"
+      class="bg-primary-600 hover:bg-primary-700 shadow px-6 py-2 rounded-full font-semibold text-black transition-colors duration-200">
+      Asignar usuario
+    </button>
+  </div>
+  <app-modal-assign-user *ngIf="showAssignModal" [projectId]="projectId" [loading]="assignLoading"
+    (assign)="handleAssignUser($event)" (closeModal)="closeAssignModal()"></app-modal-assign-user>
 </div>
 <div *ngIf="loading" class="flex justify-center items-center h-64">
   <span class="text-primary-600 text-lg animate-pulse">Cargando usuarios...</span>

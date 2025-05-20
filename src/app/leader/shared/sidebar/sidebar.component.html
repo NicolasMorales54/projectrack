@@ -16,9 +16,11 @@
       <a class="flex focus:opacity-80 focus:outline-hidden text-black dark:text-white" href="#" aria-label="Brand">
         <div class="flex flex-col-2 items-center gap-x-2">
           <img src="ufpslogo.png" class="rounded-xs w-10 h-10" alt="Logo" />
-          <div class="items-center gap-x-2 grid grid-row-2">
+          <div class="items-center gap-x-2 grid grid-row-2 max-w-[10rem]">
             <span class="font-semibold text-gray-800 dark:text-white text-lg">Projectrack</span>
-            <span *ngIf="currentUser" class="dark:opacity-80 text-gray-800 dark:text-white text-sm">
+            <span *ngIf="currentUser"
+              class="block dark:opacity-80 max-w-full text-gray-800 dark:text-white text-sm break-words truncate whitespace-normal">
+              {{ currentUser.nombre }}<br />
               {{ currentUser.correoElectronico }}
             </span>
           </div>
@@ -127,3 +129,12 @@
   </div>
 </div>
 <!-- End Sidebar -->
+<style>
+  /* ...existing code... */
+  .sidebar-user-info {
+    word-break: break-word;
+    white-space: normal;
+    max-width: 10rem;
+    display: block;
+  }
+</style>

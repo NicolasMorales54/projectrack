@@ -16,7 +16,7 @@ import { User } from '../../core/model/user.model';
   imports: [CommonModule, ReactiveFormsModule],
   template: `
     <div class="modal-backdrop" (click)="close()"></div>
-    <div class="modal-content">
+    <div class="modal-content text-black">
       <h3>Crear usuario</h3>
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <input

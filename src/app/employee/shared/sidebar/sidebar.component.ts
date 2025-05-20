@@ -1,17 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  AfterViewChecked,
-} from '@angular/core';
-import {
-  LucideAngularModule,
-  Plus,
-  ClipboardList,
-  UserRound,
-  SquareUserRound,
-} from 'lucide-angular';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewChecked, } from '@angular/core';
+import { LucideAngularModule, Plus, ClipboardList, UserRound, SquareUserRound, } from 'lucide-angular';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -19,6 +7,7 @@ import { ProjectsService } from '../../../core/services/projects.service';
 import { LoginService } from '../../../auth/services/login.service';
 import { Project } from '../../../core/model/project.model';
 import { User } from '../../../core/model/user.model';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -34,6 +23,7 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
   readonly squareUserRound = SquareUserRound;
   projects$: Project[] = [];
   currentUser: User | null = null;
+  projectColorMap: { [projectId: number]: string } = {};
 
   projectColors = [
     'bg-green-500',
@@ -45,6 +35,11 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     'bg-teal-500',
     'bg-red-500',
   ];
+
+  private getRandomColor(): string {
+    const idx = Math.floor(Math.random() * this.projectColors.length);
+    return this.projectColors[idx];
+  }
 
   constructor(
     private projectsService: ProjectsService,
@@ -60,6 +55,12 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
       this.projectsService.findByUserId(this.currentUser.id).subscribe({
         next: (data) => {
           this.projects$ = data;
+          // Assign a random color to each project if not already assigned
+          for (const project of data) {
+            if (!this.projectColorMap[project.id]) {
+              this.projectColorMap[project.id] = this.getRandomColor();
+            }
+          }
           this.cdr.markForCheck();
           console.log('Projects loaded:', this.projects$);
         },
@@ -80,8 +81,8 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  getColor(index: number): string {
-    return this.projectColors[index % this.projectColors.length];
+  getColor(projectId: number): string {
+    return this.projectColorMap[projectId] || 'bg-gray-400';
   }
 
   logout(): void {
