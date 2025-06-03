@@ -1,5 +1,5 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import { EmailsService } from '../../../../core/services/emails.service';
@@ -8,20 +8,22 @@ import { Email } from '../../../../core/model/email.model';
 
 @Component({
   selector: 'app-inbox',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './inbox.component.html',
   styleUrl: './inbox.component.css',
-  imports: [CommonModule, RouterModule],
 })
 export class InboxComponent implements OnInit {
   emails: Email[] = [];
   loading = true;
   error: string | null = null;
   myUserId: number | null = null;
-
-  private router = inject(Router);
   private loginService = inject(LoginService);
-
-  constructor(private emailsService: EmailsService) {}
+  constructor(
+    private emailsService: EmailsService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.myUserId = this.loginService.getCurrentUserId();
@@ -29,10 +31,12 @@ export class InboxComponent implements OnInit {
       next: (emails) => {
         this.emails = emails;
         this.loading = false;
+        this.cdRef.detectChanges();
       },
       error: () => {
         this.error = 'Error cargando los correos';
         this.loading = false;
+        this.cdRef.detectChanges();
       },
     });
   }

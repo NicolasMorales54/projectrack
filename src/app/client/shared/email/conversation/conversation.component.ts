@@ -4,8 +4,8 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NotificationsService } from '../../../../core/services/notifications.service';
@@ -31,7 +31,8 @@ export class ConversationComponent implements OnInit {
     private emailsService: EmailsService,
     private notificationsService: NotificationsService,
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -39,16 +40,19 @@ export class ConversationComponent implements OnInit {
     if (!emailId) {
       this.error = 'Correo no encontrado';
       this.loading = false;
+      this.cdRef.detectChanges();
       return;
     }
     this.emailsService.findOne(emailId).subscribe({
       next: (email) => {
         this.email = email;
         this.loading = false;
+        this.cdRef.detectChanges();
       },
       error: () => {
         this.error = 'No se pudo cargar el correo';
         this.loading = false;
+        this.cdRef.detectChanges();
       },
     });
     this.responseForm = this.fb.group({
@@ -59,6 +63,7 @@ export class ConversationComponent implements OnInit {
   sendResponse() {
     if (!this.email || this.responseForm.invalid) return;
     this.sending = true;
+    this.cdRef.detectChanges();
     const { cuerpo } = this.responseForm.value;
     this.emailsService
       .sendEmail(this.email.remitenteId, 'Re: ' + this.email.asunto, cuerpo)
@@ -79,6 +84,7 @@ export class ConversationComponent implements OnInit {
         error: () => {
           this.error = 'Error enviando la respuesta';
           this.sending = false;
+          this.cdRef.detectChanges();
         },
       });
   }

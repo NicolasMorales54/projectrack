@@ -1,7 +1,7 @@
 import { LucideAngularModule, Bell, Mail } from 'lucide-angular';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { Component } from '@angular/core';
 
 import { NotificationsComponent } from './shared/notifications/notifications.component';
 import { NotificationsService } from '../core/services/notifications.service';
@@ -28,10 +28,14 @@ export class ClientComponent {
   showNotifications = false;
   unreadCount = 0;
 
-  constructor(private notificationsService: NotificationsService) {}
+  constructor(
+    private notificationsService: NotificationsService,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadUnreadCount();
+    this.cdRef.detectChanges();
   }
 
   toggleNotifications() {
@@ -39,6 +43,7 @@ export class ClientComponent {
     if (this.showNotifications) {
       this.loadUnreadCount();
     }
+    this.cdRef.detectChanges();
   }
 
   loadUnreadCount() {
@@ -46,6 +51,7 @@ export class ClientComponent {
       .findMyNotifications()
       .subscribe((notifications) => {
         this.unreadCount = notifications.filter((n) => !n.leida).length;
+        this.cdRef.detectChanges();
       });
   }
 }
