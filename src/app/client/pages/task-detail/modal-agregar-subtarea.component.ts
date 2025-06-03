@@ -122,7 +122,7 @@ export class ModalAgregarSubtareaComponent {
             if (user.id !== creador?.id) {
               this.notificationsService
                 .create({
-                  usuarioId: user.id,
+                  userId: user.id,
                   mensaje: `${creadorNombre} agregó una nueva subtarea a la tarea ${nombreTarea} del proyecto ${nombreProyecto} el ${timestamp}.`,
                   tipo: 'subtarea',
                   leida: false,

@@ -66,7 +66,7 @@ export class ConversationComponent implements OnInit {
         next: () => {
           this.notificationsService
             .create({
-              usuarioId: this.email!.remitenteId,
+              userId: this.email!.remitenteId,
               mensaje: `Has recibido una respuesta a tu correo: ${
                 this.email!.asunto
               }`,

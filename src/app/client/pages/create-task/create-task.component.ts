@@ -102,7 +102,7 @@ export class CreateTaskComponent implements OnInit {
                 if (user.id !== creador?.id) {
                   this.notificationsService
                     .create({
-                      usuarioId: user.id,
+                      userId: user.id,
                       mensaje: `Se ha creado una nueva tarea en el proyecto ${nombreProyecto} por ${creadorNombre} el ${timestamp}.`,
                       tipo: 'tarea',
                       leida: false,

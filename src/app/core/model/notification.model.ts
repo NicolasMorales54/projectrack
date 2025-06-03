@@ -1,6 +1,6 @@
 export interface Notification {
   id: number;
-  usuarioId: number;
+  userId: number;
   mensaje: string;
   tipo?: string;
   fechaCreacion: Date;
@@ -9,7 +9,7 @@ export interface Notification {
 }
 
 export interface CreateNotificationDto {
-  usuarioId: number;
+  userId: number;
   mensaje: string;
   tipo?: string;
   leida?: boolean;

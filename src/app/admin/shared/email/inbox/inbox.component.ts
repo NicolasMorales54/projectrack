@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
@@ -19,7 +19,11 @@ export class InboxComponent implements OnInit {
   error: string | null = null;
   myUserId: number | null = null;
   private loginService = inject(LoginService);
-  constructor(private emailsService: EmailsService, private router: Router) {}
+  constructor(
+    private emailsService: EmailsService,
+    private router: Router,
+    private cdRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.myUserId = this.loginService.getCurrentUserId();
@@ -27,10 +31,12 @@ export class InboxComponent implements OnInit {
       next: (emails) => {
         this.emails = emails;
         this.loading = false;
+        this.cdRef.detectChanges();
       },
       error: () => {
         this.error = 'Error cargando los correos';
         this.loading = false;
+        this.cdRef.detectChanges();
       },
     });
   }

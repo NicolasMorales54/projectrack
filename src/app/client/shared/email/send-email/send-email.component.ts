@@ -58,7 +58,7 @@ export class SendEmailComponent implements OnInit {
       next: (_email: any) => {
         this.notificationsService
           .create({
-            usuarioId: destinatarioId,
+            userId: destinatarioId,
             mensaje: `Has recibido un nuevo correo: ${asunto}`,
             tipo: 'email',
             leida: false,
