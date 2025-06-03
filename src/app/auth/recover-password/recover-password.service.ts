@@ -30,4 +30,10 @@ export class RecoverPasswordService {
   updatePassword(id: number, dto: UpdatePasswordDto): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${id}/password`, dto);
   }
+
+  getHashedPassword(id: number): Observable<{ hashedPassword: string }> {
+    return this.http.get<{ hashedPassword: string }>(
+      `${this.apiUrl}/${id}/hashed-password`
+    );
+  }
 }

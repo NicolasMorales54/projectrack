@@ -47,7 +47,10 @@ export class ProjectUsersService {
   }
 
   findByUserId(userId: number): Observable<ProjectUser[]> {
-    return this.http.get<ProjectUser[]>(`${this.apiUrl}/user/${userId}`);
+    // Use the correct backend endpoint
+    return this.http.get<ProjectUser[]>(
+      `${environment.apiUrl}/projects/user/${userId}`
+    );
   }
 
   findMyProjects(): Observable<ProjectUser[]> {

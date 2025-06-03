@@ -1,6 +1,22 @@
 <div class="flex h-screen">
-    <app-sidebar class="flex-shrink-0 w-64"></app-sidebar>
-    <div class="flex-1 bg-gray-50 p-6 overflow-auto">
-        <router-outlet></router-outlet>
+  <app-sidebar class="flex-shrink-0 w-64"></app-sidebar>
+  <div class="flex flex-col flex-1 bg-gray-50">
+    <!-- Header with notifications and email icon -->
+    <div class="flex justify-between items-center bg-white shadow px-6 py-4">
+      <div class="flex items-center gap-4">
+        <button (click)="toggleNotifications()" class="relative">
+          <span class="text-gray-600 material-icons">notifications</span>
+          <span *ngIf="unreadCount > 0"
+            class="-top-1 -right-1 absolute bg-red-500 px-1 rounded-full text-white text-xs">{{ unreadCount }}</span>
+        </button>
+        <span class="text-gray-600 material-icons">email</span>
+      </div>
+      <!-- Optionally, add user info or other header content here -->
     </div>
+    <!-- Notifications Modal -->
+    <app-notifications *ngIf="showNotifications" (close)="toggleNotifications()"></app-notifications>
+    <div class="flex-1 p-6 overflow-auto">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
 </div>

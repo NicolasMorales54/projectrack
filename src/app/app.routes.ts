@@ -6,6 +6,7 @@ import { ClientComponent } from './client/client.component';
 import { AdminComponent } from './admin/admin.component';
 import { authGuard } from './core/guards/auth.guard';
 
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -151,13 +152,56 @@ export const routes: Routes = [
   {
     path: 'client',
     canActivate: [authGuard],
-    component: ClientComponent,
+    loadComponent: () =>
+      import('./client/client.component').then((m) => m.ClientComponent),
     children: [
       {
         path: 'main',
         loadComponent: () =>
           import('./client/main-page/main-page.component').then(
             (m) => m.MainPageComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/resumen',
+        loadComponent: () =>
+          import('./client/pages/resumen/resumen.component').then(
+            (m) => m.ResumenComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/kanban',
+        loadComponent: () =>
+          import('./client/pages/kanban/kanban.component').then(
+            (m) => m.KanbanComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/create-task',
+        loadComponent: () =>
+          import('./client/pages/create-task/create-task.component').then(
+            (m) => m.CreateTaskComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/task-detail/:taskId',
+        loadComponent: () =>
+          import('./client/pages/task-detail/task-detail.component').then(
+            (m) => m.TaskDetailComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/users',
+        loadComponent: () =>
+          import('./client/pages/users/users.component').then(
+            (m) => m.UsersComponent
+          ),
+      },
+      {
+        path: 'recover-password',
+        loadComponent: () =>
+          import('./client/pages/recover-password/recover-password.component').then(
+            (m) => m.RecoverPasswordComponent
           ),
       },
       // Add more client-specific child routes here

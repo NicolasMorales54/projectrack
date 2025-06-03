@@ -4,9 +4,9 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 
 import {
   RecoverPasswordService,
@@ -16,7 +16,7 @@ import {
 @Component({
   selector: 'app-recover-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './recover-password.component.html',
   styleUrl: './recover-password.component.css',
 })
