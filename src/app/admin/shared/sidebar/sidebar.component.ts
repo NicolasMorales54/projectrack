@@ -14,7 +14,6 @@ interface GroupedProjects {
   status: EstadoProyecto;
   displayName: string;
   projects: Project[];
-  color: string;
 }
 
 interface VirtualScrollItem {
@@ -135,14 +134,12 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
       this.virtualScrollItems.push({
         type: 'header',
         data: group,
-        groupColor: group.color,
         groupDisplayName: group.displayName,
       });
       group.projects.forEach((project) => {
         this.virtualScrollItems.push({
           type: 'project',
           data: project,
-          groupColor: group.color,
           groupDisplayName: group.displayName,
         });
       });

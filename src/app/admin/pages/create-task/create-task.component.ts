@@ -13,6 +13,8 @@ import {
   EstadoTarea,
   Prioridad,
 } from '../../../core/services/tasks.service';
+import { NotificationsService } from '../../../core/services/notifications.service';
+import { UsersService } from '../../../core/services/users.service';
 import { LoginService } from '../../../auth/services/login.service';
 
 @Component({
@@ -34,6 +36,8 @@ export class CreateTaskComponent implements OnInit {
   private loginService = inject(LoginService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private usersService = inject(UsersService);
+  private notificationsService = inject(NotificationsService);
 
   ngOnInit() {
     const today = new Date();
@@ -81,6 +85,34 @@ export class CreateTaskComponent implements OnInit {
       next: () => {
         this.loading = false;
         const projectId = this.form.value.projectId;
+        // Notificar a todos los miembros del proyecto
+        this.usersService.findByProjectId(projectId).subscribe((users) => {
+          const creador = this.loginService.getCurrentUser();
+          const creadorNombre =
+            creador?.nombre || creador?.correoElectronico || 'Alguien';
+          // Obtener el nombre del proyecto para el mensaje
+          this.router.routerState.root.firstChild?.data.subscribe(
+            (data: any) => {
+              const nombreProyecto = data?.projectName || 'el proyecto';
+              const timestamp = new Date().toLocaleString('es-CO', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              });
+              users.forEach((user) => {
+                if (user.id !== creador?.id) {
+                  this.notificationsService
+                    .create({
+                      usuarioId: user.id,
+                      mensaje: `Se ha creado una nueva tarea en el proyecto ${nombreProyecto} por ${creadorNombre} el ${timestamp}.`,
+                      tipo: 'tarea',
+                      leida: false,
+                    })
+                    .subscribe();
+                }
+              });
+            }
+          );
+        });
         this.router.navigate([`/admin/project/${projectId}/kanban`]);
       },
       error: () => {

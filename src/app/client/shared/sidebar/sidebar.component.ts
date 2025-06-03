@@ -1,5 +1,17 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewChecked, } from '@angular/core';
-import { LucideAngularModule, Plus, ClipboardList, UserRound, SquareUserRound, } from 'lucide-angular';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  AfterViewChecked,
+} from '@angular/core';
+import {
+  LucideAngularModule,
+  Plus,
+  ClipboardList,
+  UserRound,
+  SquareUserRound,
+} from 'lucide-angular';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -9,12 +21,10 @@ import { ProjectsService } from '../../../core/services/projects.service';
 import { LoginService } from '../../../auth/services/login.service';
 import { User } from '../../../core/model/user.model';
 
-
 interface GroupedProjects {
   status: EstadoProyecto;
   displayName: string;
   projects: Project[];
-  color: string;
 }
 
 interface VirtualScrollItem {
@@ -112,8 +122,8 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
 
     // Group projects by their status
     this.projects$.forEach((project) => {
-      const status = project.estado || EstadoProyecto.ABIERTO; // Default to ABIERTO if no estado
-      if (grouped.has(status)) {
+      const status = project.estado;
+      if (status && grouped.has(status)) {
         grouped.get(status)!.push(project);
       }
     });
@@ -132,17 +142,11 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
   private createVirtualScrollItems(): void {
     this.virtualScrollItems = [];
 
-    // Handle empty projects case
-    if (!this.groupedProjects || this.groupedProjects.length === 0) {
-      return;
-    }
-
     this.groupedProjects.forEach((group) => {
       // Add group header
       this.virtualScrollItems.push({
         type: 'header',
         data: group,
-        groupColor: group.color,
         groupDisplayName: group.displayName,
       });
 
@@ -151,7 +155,6 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
         this.virtualScrollItems.push({
           type: 'project',
           data: project,
-          groupColor: group.color,
           groupDisplayName: group.displayName,
         });
       });
