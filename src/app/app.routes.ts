@@ -128,6 +128,69 @@ export const routes: Routes = [
             (m) => m.MainPageComponent
           ),
       },
+      {
+        path: 'project/:projectId/resumen',
+        loadComponent: () =>
+          import('./leader/pages/resumen/resumen.component').then(
+            (m) => m.ResumenComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/kanban',
+        loadComponent: () =>
+          import('./leader/pages/kanban/kanban.component').then(
+            (m) => m.KanbanComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/create-task',
+        loadComponent: () =>
+          import('./leader/pages/create-task/create-task.component').then(
+            (m) => m.CreateTaskComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/task-detail/:taskId',
+        loadComponent: () =>
+          import('./leader/pages/task-detail/task-detail.component').then(
+            (m) => m.TaskDetailComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/users',
+        loadComponent: () =>
+          import('./leader/pages/users/users.component').then(
+            (m) => m.UsersComponent
+          ),
+      },
+      {
+        path: 'inbox',
+        loadComponent: () =>
+          import('./leader/shared/email/inbox/inbox.component').then(
+            (m) => m.InboxComponent
+          ),
+      },
+      {
+        path: 'conversation/:id',
+        loadComponent: () =>
+          import(
+            './leader/shared/email/conversation/conversation.component'
+          ).then((m) => m.ConversationComponent),
+      },
+      {
+        path: 'send-email/:userId',
+        loadComponent: () =>
+          import('./leader/shared/email/send-email/send-email.component').then(
+            (m) => m.SendEmailComponent
+          ),
+      },
+      {
+        path: 'recover-password',
+        loadComponent: () =>
+          import(
+            './leader/pages/recover-password/recover-password.component'
+          ).then((m) => m.RecoverPasswordComponent),
+      },
       // Add more leader-specific child routes here
     ],
   },
