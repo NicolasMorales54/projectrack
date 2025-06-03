@@ -1,6 +1,6 @@
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, Bell, Mail } from 'lucide-angular';
+import { RouterOutlet, Router } from '@angular/router';
 import { CommonModule, NgIf } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
 import { Component } from '@angular/core';
 
 import { NotificationsComponent } from './shared/notifications/notifications.component';
@@ -22,10 +22,15 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
   styleUrl: './admin.component.css',
 })
 export class AdminComponent {
+  readonly bell = Bell;
+  readonly mail = Mail;
   showNotifications = false;
   unreadCount = 0;
 
-  constructor(private notificationsService: NotificationsService) {}
+  constructor(
+    private notificationsService: NotificationsService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadUnreadCount();
@@ -44,5 +49,9 @@ export class AdminComponent {
       .subscribe((notifications) => {
         this.unreadCount = notifications.filter((n) => !n.leida).length;
       });
+  }
+
+  goToInbox() {
+    this.router.navigate(['/admin/inbox']);
   }
 }

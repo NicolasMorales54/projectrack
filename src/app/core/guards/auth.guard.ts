@@ -14,7 +14,6 @@ export const authGuard: CanActivateFn = (route, state) => {
       loginService['loadStoredToken']();
     }
     if (!loginService.isLoggedIn()) {
-      console.log('Auth guard: Not logged in, redirecting to login');
       return router.parseUrl('/login');
     }
   }
@@ -26,7 +25,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   const url = state.url;
   const userRole = currentUser?.rol;
 
-  console.log('Current user state:', JSON.stringify(currentUser, null, 2));
   console.log(
     `Auth guard: Checking access to ${url} for user with role "${userRole}"`
   );
@@ -92,7 +90,6 @@ export const authGuard: CanActivateFn = (route, state) => {
   // For routes with userId param, validate it matches logged in user
   const requestedUserId = route.params['userid'];
   if (requestedUserId && requestedUserId !== currentUserId?.toString()) {
-    console.warn('Auth guard: User ID mismatch, redirecting to correct path');
     if (currentUserId) {
       // Redirect to the same route but with correct user ID
       return router.parseUrl(
@@ -103,6 +100,5 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 
   // All checks passed
-  console.log('Auth guard: Access granted');
   return true;
 };

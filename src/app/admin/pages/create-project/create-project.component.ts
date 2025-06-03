@@ -62,7 +62,7 @@ export class CreateProjectComponent implements OnInit {
     this.projectsService.create(dto).subscribe({
       next: (_project: any) => {
         this.loading = false;
-        this.router.navigate(['/admin/projects']);
+        this.router.navigate(['/admin/main']); // Redirect to admin/main after successful creation
       },
       error: (err: any) => {
         this.loading = false;

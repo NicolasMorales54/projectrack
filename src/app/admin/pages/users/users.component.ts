@@ -5,7 +5,7 @@ import {
   inject,
   ChangeDetectorRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 import {
@@ -49,6 +49,7 @@ export class UsersComponent implements OnInit {
   private projectUsersService = inject(ProjectUsersService);
   private projectsService = inject(ProjectsService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   ngOnInit() {
@@ -136,7 +137,6 @@ export class UsersComponent implements OnInit {
   }
 
   closeAssignModal() {
-    console.log('closeAssignModal called');
     this.showAssignModal = false;
     this.assignError = null;
   }
@@ -196,9 +196,7 @@ export class UsersComponent implements OnInit {
   }
 
   contactUser(user: User) {
-    // Placeholder for contacting logic, e.g., open email client or chat
-    alert(
-      `Funcionalidad de contacto para: ${user.nombre || user.correoElectronico}`
-    );
+    // Navigate to send-email route for the selected user
+    this.router.navigate([`/admin/send-email/${user.id}`]);
   }
 }

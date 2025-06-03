@@ -58,7 +58,6 @@ export class ResumenComponent implements OnInit {
 
     this.route.paramMap.subscribe((params) => {
       // Use console.log to debug the URL and params
-      console.log('Current URL:', window.location.href);
 
       // Try all possible param names
       let projectId: number | undefined;
@@ -78,14 +77,11 @@ export class ResumenComponent implements OnInit {
         );
         if (urlMatch && urlMatch[1]) {
           projectId = Number(urlMatch[1]);
-          console.log('Extracted projectId from URL:', projectId);
         }
       }
       this.projectId = projectId ?? null;
 
       // Debug: log all route params
-      console.log('Route params:', params);
-      console.log('Resolved projectId:', projectId);
 
       if (!projectId) {
         console.error('No projectId found in route parameters');
@@ -104,7 +100,6 @@ export class ResumenComponent implements OnInit {
         )
         .subscribe({
           next: (project) => {
-            console.log('Project data received:', project);
             this.projectName = project.nombre;
             this.projectCliente = project.creadoPorId || 0;
             this.projectProgreso = 25; // Placeholder
@@ -121,7 +116,6 @@ export class ResumenComponent implements OnInit {
       // Fetch all tasks for this project
       this.tasksService.findByProjectId(projectId).subscribe({
         next: (tasks) => {
-          console.log('Tasks data received:', tasks);
           this.allTasks = tasks;
           // Sort by fechaVencimiento ascending, filter out completed
           this.tareasProximas = tasks

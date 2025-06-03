@@ -62,7 +62,6 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
             }
           }
           this.cdr.markForCheck();
-          console.log('Projects loaded:', this.projects$);
         },
         error: (err) => {
           console.error('Failed to load projects', err);

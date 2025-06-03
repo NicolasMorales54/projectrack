@@ -5,6 +5,8 @@ export interface User {
   rol?: 'Administrador' | 'Líder de Proyecto' | 'Empleado' | 'Cliente';
   createdAt?: string;
   updatedAt?: string;
+  primerNombre?: string;
+  segundoNombre?: string;
 }
 
 export interface UserState {

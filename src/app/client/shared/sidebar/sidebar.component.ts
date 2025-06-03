@@ -102,9 +102,6 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
           this.groupProjectsByStatus();
           this.createVirtualScrollItems();
           this.cdr.markForCheck();
-          console.log('Projects loaded:', this.projects$);
-          console.log('Grouped projects:', this.groupedProjects);
-          console.log('Virtual scroll items:', this.virtualScrollItems);
         },
         error: (err) => {
           console.error('Failed to load projects', err);

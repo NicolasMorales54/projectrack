@@ -1,4 +1,4 @@
-import { LucideAngularModule } from 'lucide-angular';
+import { LucideAngularModule, Bell, Mail } from 'lucide-angular';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Component } from '@angular/core';
@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { NotificationsComponent } from './shared/notifications/notifications.component';
 import { NotificationsService } from '../core/services/notifications.service';
 import { SidebarComponent } from './shared/sidebar/sidebar.component';
+
 
 @Component({
   selector: 'app-client',
@@ -22,6 +23,8 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
   styleUrl: './client.component.css',
 })
 export class ClientComponent {
+  readonly bell = Bell;
+  readonly mail = Mail;
   showNotifications = false;
   unreadCount = 0;
 

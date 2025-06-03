@@ -4,11 +4,13 @@
     <div class="flex justify-between items-center bg-white shadow px-6 py-4">
       <div class="flex items-center gap-4">
         <button (click)="toggleNotifications()" class="relative">
-          <i-lucide name="bell" [size]="24" class="text-gray-600"></i-lucide>
+          <i-lucide [img]="bell" [size]="24" class="text-gray-600"></i-lucide>
           <span *ngIf="unreadCount > 0"
             class="-top-1 -right-1 absolute bg-red-500 px-1 rounded-full text-white text-xs">{{ unreadCount }}</span>
         </button>
-        <i-lucide name="mail" [size]="24" class="text-gray-600"></i-lucide>
+        <button (click)="goToInbox()">
+          <i-lucide [img]="mail" [size]="24" class="text-gray-600"></i-lucide>
+        </button>
       </div>
     </div>
     <!-- Notifications Modal -->

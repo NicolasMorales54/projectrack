@@ -51,9 +51,6 @@ export class LoginService {
       map((response) => {
         const token = response.access_token;
         const payload = response.tokenPayload;
-        console.log('[AuthService] token generado:', token);
-        console.log('[AuthService] payload recibido:', payload);
-        console.log('[AuthService] User role from payload:', payload.rol);
 
         if (!payload || !payload.userId || !payload.email || !payload.rol) {
           console.error('Invalid token payload structure received:', payload);
@@ -75,8 +72,6 @@ export class LoginService {
             throw new Error('Session expired. Please log in again.');
           }
         } // Log the role type for debugging
-        console.log('[AuthService] Role received from API:', payload.rol);
-        console.log('[AuthService] Role type:', typeof payload.rol);
 
         // Store iat and exp in userState for session management
         const userState = {
@@ -133,7 +128,6 @@ export class LoginService {
         // Check expiration
         const now = Date.now() / 1000;
         if (!payload.exp || payload.exp < now) {
-          console.log('Token expired, logging out');
           this.logout();
           return;
         }
@@ -144,8 +138,6 @@ export class LoginService {
           this.logout();
           return;
         }
-        console.log('Loading stored token with role:', payload.rol);
-        console.log('Role type from storage:', typeof payload.rol);
 
         // Set up auto-logout timer
         const msUntilExp = payload.exp * 1000 - Date.now();

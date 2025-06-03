@@ -17,12 +17,8 @@ export const authInterceptor: HttpInterceptorFn = (
   const loginService = inject(LoginService);
   const router = inject(Router);
 
-  // Debug: log every outgoing request
-  console.log('[AuthInterceptor] Intercepting request:', req.method, req.url);
   const currentToken = loginService.getToken();
-  console.log('[AuthInterceptor] Current token:', currentToken);
 
-  // Skip adding token for login and public endpoints
   if (req.url.includes('/auth/login')) {
     return next(req);
   }
@@ -30,21 +26,14 @@ export const authInterceptor: HttpInterceptorFn = (
   const token = currentToken;
 
   if (token) {
-    // Debug: show header adding
-    console.log('[AuthInterceptor] Attaching Authorization header');
     const authRequest = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(
-      '[AuthInterceptor] Auth request headers:',
-      authRequest.headers.get('Authorization')
-    );
 
     return next(authRequest).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Handle 401 Unauthorized errors (expired token)
         if (error.status === 401) {
           console.warn('[AuthInterceptor] 401 received, logging out');
           loginService.logout();

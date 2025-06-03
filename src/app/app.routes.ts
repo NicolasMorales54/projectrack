@@ -86,7 +86,27 @@ export const routes: Routes = [
             (m) => m.UsersComponent
           ),
       },
-
+      {
+        path: 'inbox',
+        loadComponent: () =>
+          import('./admin/shared/email/inbox/inbox.component').then(
+            (m) => m.InboxComponent
+          ),
+      },
+      {
+        path: 'conversation/:id',
+        loadComponent: () =>
+          import(
+            './admin/shared/email/conversation/conversation.component'
+          ).then((m) => m.ConversationComponent),
+      },
+      {
+        path: 'send-email/:userId',
+        loadComponent: () =>
+          import('./admin/shared/email/send-email/send-email.component').then(
+            (m) => m.SendEmailComponent
+          ),
+      },
       {
         path: 'recover-password',
         loadComponent: () =>

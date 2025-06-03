@@ -45,7 +45,6 @@ export class SubtasksService {
     return this.http.get<Subtask[]>(`${this.apiUrl}/by-project/${projectId}`);
   }
   createForTask(taskId: number, dto: CreateSubtaskDto): Observable<Subtask> {
-    console.log(`Calling API: POST ${this.apiUrl}/by-task/${taskId}`, dto);
     return this.http.post<Subtask>(`${this.apiUrl}/by-task/${taskId}`, dto);
   }
 

@@ -51,7 +51,6 @@ export class UsersComponent implements OnInit {
 
         this.usersService.findByProjectId(this.projectId).subscribe({
           next: (users: any[]) => {
-            console.log('Received users from backend:', users);
             this.users = users.map((u) => {
               // Fallback to available fields
               return {

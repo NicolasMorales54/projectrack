@@ -37,40 +37,30 @@ export class LoginComponent {
       return;
     }
     this.loading = true;
-    console.log('Login form submitted:', this.loginForm.value);
     this.loginService.login(this.loginForm.value).subscribe({
       next: (response) => {
         this.loading = false;
         const userId = response.userId;
         const rol = response.rol;
-        console.log('Login successful, user ID:', userId, 'role:', rol);
-        console.log('Role type:', typeof rol);
 
         if (userId && rol) {
           let route = '';
           switch (rol) {
             case 'Administrador':
               route = '/admin/main';
-              console.log('Routing to admin main page');
               break;
             case 'Líder de Proyecto':
               route = '/leader/main';
-              console.log('Routing to leader main page');
               break;
             case 'Empleado':
               route = '/employee/main';
-              console.log('Routing to employee main page');
               break;
             case 'Cliente':
               route = '/client/main';
-              console.log('Routing to client main page');
               break;
             default:
-              console.log('Unknown role:', rol);
               route = `/${userId}/main`;
-              console.log('Routing to default main page');
           }
-          console.log('Navigating to route:', route);
           this.router.navigate([route]);
         }
       },
