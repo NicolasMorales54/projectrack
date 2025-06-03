@@ -83,9 +83,9 @@ export class KanbanComponent implements OnInit {
       });
 
       this.tasksService.findByProjectId(this.projectId).subscribe((tasks) => {
-        const mias = tasks.filter((t) => t.creadoPorId === this.currentUserId);
+        // Mostrar todas las tareas del proyecto, no solo las creadas por el usuario actual
         for (const est of Object.values(EstadoTarea))
-          this.tasksByEstado[est] = mias.filter((t) => t.estado === est);
+          this.tasksByEstado[est] = tasks.filter((t) => t.estado === est);
 
         this.loading = false;
         this.cdr.detectChanges();
