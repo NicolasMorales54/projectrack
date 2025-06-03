@@ -16,6 +16,7 @@ import { ProjectUsersService } from '../../../core/services/project-users.servic
 import { UsersExtraService } from '../../../core/services/users-extra.service';
 import { ProjectsService } from '../../../core/services/projects.service';
 import { ModalAssignUserComponent } from './modal-assign-user.component';
+import { ModalEditUserComponent } from './modal-edit-user.component';
 import { UsersService } from '../../../core/services/users.service';
 import { Project } from '../../../core/model/project.model';
 import { User } from '../../../core/model/user.model';
@@ -23,7 +24,7 @@ import { User } from '../../../core/model/user.model';
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule, ModalAssignUserComponent],
+  imports: [CommonModule, ModalAssignUserComponent, ModalEditUserComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +38,11 @@ export class UsersComponent implements OnInit {
   showAssignModal = false;
   assignLoading = false;
   assignError: string | null = null;
+
+  showEditModal = false;
+  editLoading = false;
+  editError: string | null = null;
+  selectedUser: User | null = null;
 
   private usersService = inject(UsersService);
   private usersExtraService = inject(UsersExtraService);
@@ -133,5 +139,66 @@ export class UsersComponent implements OnInit {
     console.log('closeAssignModal called');
     this.showAssignModal = false;
     this.assignError = null;
+  }
+
+  openEditModal(user: User) {
+    this.selectedUser = user;
+    this.showEditModal = true;
+    this.editLoading = false;
+    this.editError = null;
+    this.cdr.markForCheck();
+  }
+
+  handleEditUser(data: any) {
+    if (!data.id) return;
+    this.editLoading = true;
+    this.editError = null;
+    // Only update name, email, and role in project
+    const updateDto = {
+      nombre: data.nombre,
+      correoElectronico: data.correoElectronico,
+      rol: data.rolEnProyecto,
+    };
+    this.usersService.update(data.id, updateDto).subscribe({
+      next: () => {
+        this.showEditModal = false;
+        this.editLoading = false;
+        // Refresh users list
+        if (this.projectId) {
+          this.usersService
+            .findByProjectId(this.projectId)
+            .subscribe((users: any[]) => {
+              this.users = users.map((u) => ({
+                id: u.id,
+                nombre: u.primerNombre || u.nombre || u.nombreUsuario || '',
+                correoElectronico: u.correoElectronico || '',
+                rol: u.rol || u.rolEnProyecto || '',
+                createdAt: u.createdAt || u.fechaRegistro || '',
+              }));
+              this.cdr.markForCheck();
+            });
+        }
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        this.editError = 'No se pudo editar el usuario.';
+        this.editLoading = false;
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  closeEditModal() {
+    this.showEditModal = false;
+    this.editError = null;
+    this.selectedUser = null;
+    this.cdr.markForCheck();
+  }
+
+  contactUser(user: User) {
+    // Placeholder for contacting logic, e.g., open email client or chat
+    alert(
+      `Funcionalidad de contacto para: ${user.nombre || user.correoElectronico}`
+    );
   }
 }

@@ -6,7 +6,6 @@ import { ClientComponent } from './client/client.component';
 import { AdminComponent } from './admin/admin.component';
 import { authGuard } from './core/guards/auth.guard';
 
-
 export const routes: Routes = [
   {
     path: 'login',
@@ -46,6 +45,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'create-project',
+        loadComponent: () =>
+          import('./admin/pages/create-project/create-project.component').then(
+            (m) => m.CreateProjectComponent
+          ),
+      },
+      {
         path: 'project/:projectId/resumen',
         loadComponent: () =>
           import('./admin/pages/resumen/resumen.component').then(
@@ -81,7 +87,13 @@ export const routes: Routes = [
           ),
       },
 
-      // Add more admin-specific child routes here
+      {
+        path: 'recover-password',
+        loadComponent: () =>
+          import(
+            './admin/pages/recover-password/recover-password.component'
+          ).then((m) => m.RecoverPasswordComponent),
+      },
     ],
   },
   {
@@ -200,9 +212,9 @@ export const routes: Routes = [
       {
         path: 'recover-password',
         loadComponent: () =>
-          import('./client/pages/recover-password/recover-password.component').then(
-            (m) => m.RecoverPasswordComponent
-          ),
+          import(
+            './client/pages/recover-password/recover-password.component'
+          ).then((m) => m.RecoverPasswordComponent),
       },
       // Add more client-specific child routes here
     ],

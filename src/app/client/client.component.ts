@@ -1,3 +1,4 @@
+import { LucideAngularModule } from 'lucide-angular';
 import { CommonModule, NgIf } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Component } from '@angular/core';
@@ -15,6 +16,7 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
     NotificationsComponent,
     CommonModule,
     NgIf,
+    LucideAngularModule,
   ],
   templateUrl: './client.component.html',
   styleUrl: './client.component.css',
