@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -54,7 +54,8 @@ export class TaskDetailComponent implements OnInit {
       TimeTrackingService
     ),
     private usersService: UsersService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router // Inject Router for navigation
   ) {}
 
   ngOnInit() {
@@ -222,5 +223,24 @@ export class TaskDetailComponent implements OnInit {
       this.addTimeRecord(start, end, event.notes);
     }
     this.showRegistrarTiempoModal = false;
+  }
+
+  deleteTask() {
+    if (!this.task) return;
+    if (!confirm('¿Estás seguro de que deseas eliminar esta tarea?')) return;
+    this.tasksService.remove(this.task.id).subscribe({
+      next: () => {
+        // Navigate to project kanban or task list after deletion
+        const projectId = this.task?.projectId;
+        if (projectId) {
+          this.router.navigate([`/admin/project/${projectId}/kanban`]);
+        } else {
+          this.router.navigate(['/admin']);
+        }
+      },
+      error: () => {
+        alert('Error al eliminar la tarea.');
+      },
+    });
   }
 }

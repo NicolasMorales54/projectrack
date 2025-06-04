@@ -51,6 +51,6 @@ export class LeaderComponent {
   }
 
   goToInbox() {
-    this.router.navigate(['/admin/inbox']);
+    this.router.navigate(['/leader/inbox']);
   }
 }

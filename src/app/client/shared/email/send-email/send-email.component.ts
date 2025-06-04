@@ -1,16 +1,5 @@
-import {
-  FormBuilder,
-  FormGroup,
-  Validators,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import {
-  Component,
-  Input,
-  OnInit,
-  inject,
-  ChangeDetectorRef,
-} from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, } from '@angular/forms';
+import { Component, Input, OnInit, inject, ChangeDetectorRef, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -19,6 +8,7 @@ import { EmailsService } from '../../../../core/services/emails.service';
 import { UsersService } from '../../../../core/services/users.service';
 import { LoginService } from '../../../../auth/services/login.service';
 import { User } from '../../../../core/model/user.model';
+
 
 @Component({
   selector: 'app-send-email',
@@ -111,7 +101,7 @@ export class SendEmailComponent implements OnInit {
         console.log('Outgoing notification payload:', notificationPayload);
         this.notificationsService.create(notificationPayload).subscribe({
           next: () => {
-            this.router.navigate(['/admin/inbox']);
+            this.router.navigate(['/client/inbox']);
           },
           error: (notifErr: any) => {
             this.error =
@@ -121,7 +111,7 @@ export class SendEmailComponent implements OnInit {
             this.cdRef.detectChanges();
             console.error('Error creando la notificación:', notifErr);
             // Igual redirigimos aunque falle la notificación
-            this.router.navigate(['/admin/inbox']);
+            this.router.navigate(['/client/inbox']);
           },
         });
       },
