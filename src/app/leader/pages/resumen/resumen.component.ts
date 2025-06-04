@@ -5,13 +5,16 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { finalize } from 'rxjs/operators';
 
 import { TasksService, Task } from '../../../core/services/tasks.service';
+import { SubtasksService } from '../../../core/services/subtasks.service';
 import { ProjectsService } from '../../../core/services/projects.service';
 import { UsersService } from '../../../core/services/users.service';
 import { LoginService } from '../../../auth/services/login.service';
+import { Subtask } from '../../../core/model/subtask.model';
 import { User } from '../../../core/model/user.model';
 
 @Component({
@@ -36,6 +39,7 @@ export class ResumenComponent implements OnInit {
   userId = '';
   projectId: number | null = null;
   loading = true;
+  subtasksByTaskId = signal<{ [taskId: number]: Subtask[] }>({});
 
   constructor(
     private route: ActivatedRoute,
@@ -43,7 +47,8 @@ export class ResumenComponent implements OnInit {
     private tasksService: TasksService,
     private usersService: UsersService,
     private loginService: LoginService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private subtasksService: SubtasksService
   ) {}
 
   ngOnInit() {
@@ -160,6 +165,34 @@ export class ResumenComponent implements OnInit {
             });
           }
 
+          // Fetch all subtasks for these tasks
+          const taskIds = tasks.map((t) => t.id);
+          let loaded = 0;
+          const subtasksMap: { [taskId: number]: Subtask[] } = {};
+          if (taskIds.length === 0) {
+            this.subtasksByTaskId.set(subtasksMap);
+          } else {
+            taskIds.forEach((taskId) => {
+              this.subtasksService.findByTaskId(taskId).subscribe({
+                next: (subtasks: Subtask[]) => {
+                  subtasksMap[taskId] = subtasks;
+                  loaded++;
+                  if (loaded === taskIds.length) {
+                    this.subtasksByTaskId.set(subtasksMap);
+                    this.cdr.markForCheck();
+                  }
+                },
+                error: () => {
+                  loaded++;
+                  if (loaded === taskIds.length) {
+                    this.subtasksByTaskId.set(subtasksMap);
+                    this.cdr.markForCheck();
+                  }
+                },
+              });
+            });
+          }
+
           this.cdr.markForCheck();
         },
         error: (err) => {
@@ -175,5 +208,14 @@ export class ResumenComponent implements OnInit {
     const due = new Date(date);
     const diff = due.getTime() - now.getTime();
     return Math.max(Math.ceil(diff / (1000 * 60 * 60 * 24)), 0);
+  }
+
+  getSubtaskProgressSignal(taskId: number) {
+    return computed(() => {
+      const subtasks = this.subtasksByTaskId()[taskId] || [];
+      if (subtasks.length === 0) return null;
+      const completed = subtasks.filter((s) => s.completada).length;
+      return Math.round((completed / subtasks.length) * 100);
+    });
   }
 }

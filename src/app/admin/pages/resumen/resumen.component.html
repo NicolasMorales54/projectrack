@@ -17,13 +17,14 @@
       </div>
     </div>
     <!-- Tareas próximas -->
+    <!-- Tareas próximas -->
     <div>
-      <h3 class="mb-2 font-semibold text-black text-lg">Tareas próximas</h3>
+      <h3 class="mb-2 font-semibold text-lg">Tareas próximas</h3>
       <div class="gap-4 grid grid-cols-1 md:grid-cols-2">
         <a *ngFor="let tarea of tareasProximas" class="bg-white shadow p-4 rounded-xl resumen-tarea-card"
           [routerLink]="['/admin/project', projectId, 'task-detail', tarea.id]">
           <div class="flex justify-between items-center mb-2">
-            <span class="font-semibold text-black">{{ tarea.nombre }}</span>
+            <span class="font-semibold">{{ tarea.nombre }}</span>
             <span class="text-gray-400 text-xs">{{ tarea.categoria || tarea.prioridad }}</span>
           </div>
           <div class="mb-2">
