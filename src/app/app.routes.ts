@@ -242,10 +242,10 @@ export const routes: Routes = [
             (m) => m.UsersComponent
           ),
       },
-{
+      {
         path: 'inbox',
         loadComponent: () =>
-          import('./leader/shared/email/inbox/inbox.component').then(
+          import('./employee/shared/email/inbox/inbox.component').then(
             (m) => m.InboxComponent
           ),
       },
@@ -253,13 +253,13 @@ export const routes: Routes = [
         path: 'conversation/:id',
         loadComponent: () =>
           import(
-            './leader/shared/email/conversation/conversation.component'
+            './employee/shared/email/conversation/conversation.component'
           ).then((m) => m.ConversationComponent),
       },
       {
         path: 'send-email/:userId',
         loadComponent: () =>
-          import('./leader/shared/email/send-email/send-email.component').then(
+          import('./employee/shared/email/send-email/send-email.component').then(
             (m) => m.SendEmailComponent
           ),
       },
