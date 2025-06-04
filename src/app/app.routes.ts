@@ -6,6 +6,7 @@ import { ClientComponent } from './client/client.component';
 import { AdminComponent } from './admin/admin.component';
 import { authGuard } from './core/guards/auth.guard';
 
+
 export const routes: Routes = [
   {
     path: 'login',
@@ -240,6 +241,34 @@ export const routes: Routes = [
           import('./employee/pages/users/users.component').then(
             (m) => m.UsersComponent
           ),
+      },
+{
+        path: 'inbox',
+        loadComponent: () =>
+          import('./leader/shared/email/inbox/inbox.component').then(
+            (m) => m.InboxComponent
+          ),
+      },
+      {
+        path: 'conversation/:id',
+        loadComponent: () =>
+          import(
+            './leader/shared/email/conversation/conversation.component'
+          ).then((m) => m.ConversationComponent),
+      },
+      {
+        path: 'send-email/:userId',
+        loadComponent: () =>
+          import('./leader/shared/email/send-email/send-email.component').then(
+            (m) => m.SendEmailComponent
+          ),
+      },
+      {
+        path: 'recover-password',
+        loadComponent: () =>
+          import(
+            './leader/pages/recover-password/recover-password.component'
+          ).then((m) => m.RecoverPasswordComponent),
       },
       // Add more employee-specific child routes here
     ],

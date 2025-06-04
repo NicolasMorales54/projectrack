@@ -1,17 +1,42 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, AfterViewChecked, } from '@angular/core';
-import { LucideAngularModule, Plus, ClipboardList, UserRound, SquareUserRound, } from 'lucide-angular';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  AfterViewChecked,
+} from '@angular/core';
+import {
+  LucideAngularModule,
+  Plus,
+  ClipboardList,
+  UserRound,
+  SquareUserRound,
+} from 'lucide-angular';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import { Project, EstadoProyecto } from '../../../core/model/project.model';
 import { ProjectsService } from '../../../core/services/projects.service';
 import { LoginService } from '../../../auth/services/login.service';
-import { Project } from '../../../core/model/project.model';
 import { User } from '../../../core/model/user.model';
 
+interface GroupedProjects {
+  status: EstadoProyecto;
+  displayName: string;
+  projects: Project[];
+}
+
+interface VirtualScrollItem {
+  type: 'header' | 'project';
+  data: GroupedProjects | Project;
+  groupColor?: string;
+  groupDisplayName?: string;
+}
 
 @Component({
   selector: 'app-sidebar',
-  imports: [LucideAngularModule, CommonModule, RouterLink],
+  imports: [LucideAngularModule, CommonModule, RouterLink, ScrollingModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,8 +47,9 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
   readonly userRound = UserRound;
   readonly squareUserRound = SquareUserRound;
   projects$: Project[] = [];
+  groupedProjects: GroupedProjects[] = [];
+  virtualScrollItems: VirtualScrollItem[] = [];
   currentUser: User | null = null;
-  projectColorMap: { [projectId: number]: string } = {};
 
   projectColors = [
     'bg-green-500',
@@ -35,11 +61,30 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     'bg-teal-500',
     'bg-red-500',
   ];
-
-  private getRandomColor(): string {
-    const idx = Math.floor(Math.random() * this.projectColors.length);
-    return this.projectColors[idx];
-  }
+  statusConfig: {
+    [key in EstadoProyecto]: { displayName: string; color: string };
+  } = {
+    [EstadoProyecto.EN_PROGRESO]: {
+      displayName: 'Proyectos En Progreso',
+      color: 'bg-blue-500',
+    },
+    [EstadoProyecto.ABIERTO]: {
+      displayName: 'Proyectos Abiertos',
+      color: 'bg-yellow-500',
+    },
+    [EstadoProyecto.PAUSADO]: {
+      displayName: 'Proyectos Pausados',
+      color: 'bg-yellow-500',
+    },
+    [EstadoProyecto.COMPLETADO]: {
+      displayName: 'Proyectos Completados',
+      color: 'bg-green-500',
+    },
+    [EstadoProyecto.ARCHIVADO]: {
+      displayName: 'Proyectos Archivados',
+      color: 'bg-gray-500',
+    },
+  };
 
   constructor(
     private projectsService: ProjectsService,
@@ -47,7 +92,6 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
-
   ngOnInit(): void {
     // Get current user
     this.currentUser = this.loginService.getCurrentUser();
@@ -55,12 +99,8 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
       this.projectsService.findByUserId(this.currentUser.id).subscribe({
         next: (data) => {
           this.projects$ = data;
-          // Assign a random color to each project if not already assigned
-          for (const project of data) {
-            if (!this.projectColorMap[project.id]) {
-              this.projectColorMap[project.id] = this.getRandomColor();
-            }
-          }
+          this.groupProjectsByStatus();
+          this.createVirtualScrollItems();
           this.cdr.markForCheck();
         },
         error: (err) => {
@@ -68,6 +108,54 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
         },
       });
     }
+  }
+  private groupProjectsByStatus(): void {
+    const grouped = new Map<EstadoProyecto, Project[]>();
+
+    // Initialize all status groups
+    Object.values(EstadoProyecto).forEach((status) => {
+      grouped.set(status, []);
+    });
+
+    // Group projects by their status
+    this.projects$.forEach((project) => {
+      const status = project.estado;
+      if (status && grouped.has(status)) {
+        grouped.get(status)!.push(project);
+      }
+    });
+
+    // Convert to array and filter out empty groups
+    this.groupedProjects = Array.from(grouped.entries())
+      .map(([status, projects]) => ({
+        status,
+        displayName: this.statusConfig[status].displayName,
+        projects,
+        color: this.statusConfig[status].color,
+      }))
+      .filter((group) => group.projects.length > 0);
+  }
+
+  private createVirtualScrollItems(): void {
+    this.virtualScrollItems = [];
+
+    this.groupedProjects.forEach((group) => {
+      // Add group header
+      this.virtualScrollItems.push({
+        type: 'header',
+        data: group,
+        groupDisplayName: group.displayName,
+      });
+
+      // Add all projects in this group
+      group.projects.forEach((project) => {
+        this.virtualScrollItems.push({
+          type: 'project',
+          data: project,
+          groupDisplayName: group.displayName,
+        });
+      });
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -80,8 +168,24 @@ export class SidebarComponent implements OnInit, AfterViewChecked {
     }
   }
 
-  getColor(projectId: number): string {
-    return this.projectColorMap[projectId] || 'bg-gray-400';
+  getColor(index: number): string {
+    return this.projectColors[index % this.projectColors.length];
+  }
+
+  getProject(item: VirtualScrollItem): Project {
+    return item.data as Project;
+  }
+
+  getGroupData(item: VirtualScrollItem): GroupedProjects {
+    return item.data as GroupedProjects;
+  }
+
+  trackVirtualItem(index: number, item: VirtualScrollItem): string {
+    if (item.type === 'header') {
+      return `header-${(item.data as GroupedProjects).status}-${index}`;
+    } else {
+      return `project-${(item.data as Project).id}-${index}`;
+    }
   }
 
   logout(): void {
