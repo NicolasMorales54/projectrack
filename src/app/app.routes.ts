@@ -6,7 +6,6 @@ import { ClientComponent } from './client/client.component';
 import { AdminComponent } from './admin/admin.component';
 import { authGuard } from './core/guards/auth.guard';
 
-
 export const routes: Routes = [
   {
     path: 'login',
@@ -115,6 +114,13 @@ export const routes: Routes = [
             './admin/pages/recover-password/recover-password.component'
           ).then((m) => m.RecoverPasswordComponent),
       },
+      {
+        path: 'project/:projectId/edit-details',
+        loadComponent: () =>
+          import(
+            './admin/pages/edit-project-details/edit-project-details.component'
+          ).then((m) => m.EditProjectDetailsComponent),
+      },
     ],
   },
   {
@@ -134,6 +140,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./leader/pages/resumen/resumen.component').then(
             (m) => m.ResumenComponent
+          ),
+      },
+      {
+        path: 'project/:projectId/users',
+        loadComponent: () =>
+          import('./leader/pages/users/users.component').then(
+            (m) => m.UsersComponent
           ),
       },
       {
@@ -259,9 +272,9 @@ export const routes: Routes = [
       {
         path: 'send-email/:userId',
         loadComponent: () =>
-          import('./employee/shared/email/send-email/send-email.component').then(
-            (m) => m.SendEmailComponent
-          ),
+          import(
+            './employee/shared/email/send-email/send-email.component'
+          ).then((m) => m.SendEmailComponent),
       },
       {
         path: 'recover-password',

@@ -97,8 +97,7 @@
         <span class="text-gray-500 text-xs">Descripción</span>
         <p class="mt-1 text-gray-700 text-xs">{{ projectDescripcion }}</p>
       </div>
-      <button class="bg-red-700 hover:bg-red-800 mt-2 py-2 rounded-lg w-full font-semibold text-white">Visitar tablero
-        Kanban</button>
+      <button class="bg-red-700 hover:bg-red-800 mt-2 py-2 rounded-lg w-full font-semibold text-black" [routerLink]="['/client/project', projectId, 'kanban']">Visitar tablero Kanban</button>
     </div>
   </aside>
 </div>
